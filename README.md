@@ -25,18 +25,7 @@
 > **Note:** The core proprietary production implementation, adaptive Self-RAG routing nodes, and custom operational chunking workflows are maintained inside an authenticated private repository.  
 > If you are a recruiter, collaborator, or engineering team looking to audit the full codebase or evaluate architecture integration, please contact: **[shubham.shivare9112@gmail.com](mailto:shubham.shivare9112@gmail.com)**.
 
----
 
-## ✨ Core Highlights
-
-- 🧠 **13-Node LangGraph Self-RAG**: Dynamically routes incident queries, grades evidence relevance (`IsREL`), automatically rewrites sub-optimal queries, verifies context support/hallucinations (`IsSUP`), and validates operational usefulness (`IsUSE`).
-- 📚 **Private Runbooks First**: Prioritizes internal SOP documents (`.pdf`, `.md`, `.txt`, `.docx`) utilizing deterministic SHA-256 chunking (`_stable_chunk_id`) to ensure repeated ingestions never produce duplicate vector entries.
-- 🌐 **Smart Web Fallback**: Triggers targeted **Tavily** web search only after internal operational runbook query rewrites have been exhausted without sufficient relevance score.
-- 🚧 **Cloud-Only Guardrail**: Non-retrieval conversational questions route through a strict cloud classifier. Queries unrelated to cloud, DevOps, or site-reliability engineering are halted with a safe, direct guardrail refusal without invoking downstream tools.
-- ⏱️ **IP Rate Limiting**: Enforces a sliding-window rate limit (default: 2 requests per IP per hour) on `/api/chat` with `X-Forwarded-For` proxy awareness to safeguard LLM tokens and downstream APIs.
-- 💾 **Stateful Checkpointing & Audit Trails**: Preserves continuous thread state across multi-turn diagnostic sessions using SQLite checkpointing (`langgraph_memory.sqlite`) and logs every routing step and query trace to an audit store (`audit.db`).
-
----
 
 ## 🏗️ Architecture & Self-RAG Graph
 
@@ -90,6 +79,18 @@ flowchart TD
 
 **Graph Color Legend:**  
 🟦 **Blue (`Memory & Generation`)** · 🟩 **Teal (`Pinecone / Tavily Retrieval`)** · 🟧 **Amber (`LLM Grading & Routing`)** · 🟪 **Purple (`Self-Correction & Query Rewrite`)** · 🟢 **Emerald (`IsSUP & IsUSE Verification`)** · 🟥 **Crimson (`Safe No-Answer Fallback`)** · ⬛ **Slate (`IP Rate Limiter`)** · 🩷 **Pink (`Cloud-Only Guardrail & Refusal`)**
+
+---
+---
+
+## ✨ Core Highlights
+
+- 🧠 **13-Node LangGraph Self-RAG**: Dynamically routes incident queries, grades evidence relevance (`IsREL`), automatically rewrites sub-optimal queries, verifies context support/hallucinations (`IsSUP`), and validates operational usefulness (`IsUSE`).
+- 📚 **Private Runbooks First**: Prioritizes internal SOP documents (`.pdf`, `.md`, `.txt`, `.docx`) utilizing deterministic SHA-256 chunking (`_stable_chunk_id`) to ensure repeated ingestions never produce duplicate vector entries.
+- 🌐 **Smart Web Fallback**: Triggers targeted **Tavily** web search only after internal operational runbook query rewrites have been exhausted without sufficient relevance score.
+- 🚧 **Cloud-Only Guardrail**: Non-retrieval conversational questions route through a strict cloud classifier. Queries unrelated to cloud, DevOps, or site-reliability engineering are halted with a safe, direct guardrail refusal without invoking downstream tools.
+- ⏱️ **IP Rate Limiting**: Enforces a sliding-window rate limit (default: 2 requests per IP per hour) on `/api/chat` with `X-Forwarded-For` proxy awareness to safeguard LLM tokens and downstream APIs.
+- 💾 **Stateful Checkpointing & Audit Trails**: Preserves continuous thread state across multi-turn diagnostic sessions using SQLite checkpointing (`langgraph_memory.sqlite`) and logs every routing step and query trace to an audit store (`audit.db`).
 
 ---
 
